@@ -59,6 +59,8 @@ class _ResultPageState extends State<ResultPage> {
   Widget build(BuildContext context) {
     print('result isn ${widget.result.energyKjPoints}');
     print('product type is ${widget.result.prodcutType}');
+    print('fruite point type is ${widget.result.fruiteVegeGPoints}');
+
     print('sugar point is ${result.sugarGPoints}');
 
     print('product result is ${widget.result.fruiteVegeGPoints} ');

@@ -108,7 +108,7 @@ class ProductTile extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  width: Get.width * 0.5,
+                  width: Get.width * 0.45,
                   child: Text(
                     product.genericName ?? "",
                     maxLines: 1,

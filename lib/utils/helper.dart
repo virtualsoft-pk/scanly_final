@@ -235,9 +235,10 @@ ProductType getProductType(String categories) {
     RegExp waterExp = RegExp(r"^(.*)(water)(.*)$");
     RegExp beverageExp = RegExp(r"^(.*)(boissons|drink|beverage|soda)(.*)$");
     RegExp nonBeverage = RegExp(r"^(.*)(plant-based|food)(.*)$");
-    RegExp nonBeverageTwo = RegExp(r"^(.*)(aliments)(.*)$");
-    RegExp fatExp =
-        RegExp(r"^(.*)(fat|oil|cheeses|fromages|pétrole|graisse)(.*)$");
+    RegExp nonBeverageTwo =
+        RegExp(r"^(.*)(alimentsetboissonsàbasedevégétaux)(.*)$");
+    RegExp fatExp = RegExp(
+        r"^(.*)(fats|oil|cheeses|fromages|pétrole|matièresgrasses)(.*)$");
 
     if (waterExp.hasMatch(categories)) {
       return ProductType.water;
