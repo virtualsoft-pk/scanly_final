@@ -24,6 +24,7 @@ class ScanController extends GetxController {
   late final ApiController apiController;
   Product? product;
   final isarService = IsarService();
+  RxBool isDefaultExist = false.obs;
 
   @override
   void onInit() {

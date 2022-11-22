@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:scanly/controllers/scan_controller.dart';
 import 'package:scanly/utils/values.dart';
 
 import '../models/product.dart';
@@ -272,8 +274,13 @@ Quality getProductQuality(int points) {
 Quality getNegNutrimentQuality(int points) {
   if (points < 2) return Quality.excellent;
   if (points < 4) return Quality.good;
-  if (points < 7) return Quality.average;
-  return Quality.poor;
+  if (points < 7) {
+    Get.put(ScanController()).isDefaultExist.value = true;
+    return Quality.average;
+  } else {
+    Get.put(ScanController()).isDefaultExist.value = true;
+    return Quality.poor;
+  }
 }
 
 Quality getSaltNutrimentQuality(int points) {
@@ -287,15 +294,25 @@ Quality getNormalSugarNutrimentQuality(int points) {
   print('normal sugar points is $points');
   if (points < 1.5) return Quality.excellent;
   if (points < 4.5) return Quality.good;
-  if (points < 9) return Quality.average;
-  return Quality.poor;
+  if (points < 9) {
+    Get.put(ScanController()).isDefaultExist.value = true;
+    return Quality.average;
+  } else {
+    Get.put(ScanController()).isDefaultExist.value = true;
+    return Quality.poor;
+  }
 }
 
 Quality getNproductsEnergyNutrimentQuality(int points) {
   if (points < 670) return Quality.excellent;
   if (points < 1340) return Quality.good;
-  if (points < 2345) return Quality.average;
-  return Quality.poor;
+  if (points < 2345) {
+    Get.put(ScanController()).isDefaultExist.value = true;
+    return Quality.average;
+  } else {
+    Get.put(ScanController()).isDefaultExist.value = true;
+    return Quality.poor;
+  }
 }
 
 Quality getBevSugarNegNutrimentQuality(int points) {
@@ -309,8 +326,15 @@ Quality getBevSugarNegNutrimentQuality(int points) {
 Quality getNegNutrimentBevQuality(int points) {
   if (points < 30) return Quality.excellent;
   if (points < 90) return Quality.good;
-  if (points < 180) return Quality.average;
-  return Quality.poor;
+  if (points < 180) {
+    Get.put(ScanController()).isDefaultExist.value = true;
+    return Quality.average;
+  } else {
+    Get.put(ScanController()).isDefaultExist.value = true;
+    return Quality.poor;
+  }
+
+  // return Quality.poor;
 }
 
 Quality getPosNutrimentQuality(int points) {
@@ -323,8 +347,15 @@ Quality getPosNutrimentQuality(int points) {
 Quality getProtienNutrimentQuality(int points) {
   if (points < 1.6) return Quality.excellent;
   if (points < 3.2) return Quality.good;
-  if (points < 6.4) return Quality.average;
-  return Quality.poor;
+  if (points < 6.4) {
+    Get.put(ScanController()).isDefaultExist.value = true;
+
+    return Quality.average;
+  } else {
+    Get.put(ScanController()).isDefaultExist.value = true;
+    return Quality.poor;
+  }
+  ;
 }
 
 String getAmountLabelForNegNutriment(int points) {

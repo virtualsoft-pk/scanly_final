@@ -59,12 +59,16 @@ class _ResultPageState extends State<ResultPage> {
   Widget build(BuildContext context) {
     print('result isn ${widget.result.energyKjPoints}');
     print('product type is ${widget.result.prodcutType}');
-    print('fruite point type is ${widget.result.fruiteVegeGPoints}');
+    print('fruite point type is ${widget.result.fruitesVegetablesG}');
+    print('fat are ${widget.result.fat}');
+    print("additives fat : ${result.additiveTags}");
 
-    print('sugar point is ${result.sugarGPoints}');
+    print('sugar point is ${result.fiberG}');
 
     print('product result is ${widget.result.fruiteVegeGPoints} ');
-    print('energy ${result.energyKcal}');
+    print('energy is ${result.energyKcal}');
+    print(
+        "here is quality ${getPosNutrimentQuality(result.fruiteVegeGPoints) == Quality.poor ? "true" : "false"}");
     log("total points ${widget.result.energyKjPoints + widget.result.saltPoints + widget.result.energyKjPoints + widget.result.sugarGPoints}");
     result.total = widget.result.proteinsGPoints +
         widget.result.saltPoints +
@@ -120,15 +124,16 @@ class _ResultPageState extends State<ResultPage> {
           child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
             const SizedBox(height: 16),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    height: 140,
-                    width: 140,
+                    height: 130,
+                    width: 120,
                     decoration: BoxDecoration(
+                      // color: Colors.black,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: ClipRRect(
@@ -149,7 +154,7 @@ class _ResultPageState extends State<ResultPage> {
                       // ),
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 12),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -168,8 +173,6 @@ class _ResultPageState extends State<ResultPage> {
                               fontSize: 16),
                         ),
                       ),
-                      // if (result.genericName != null &&
-                      //     result.genericName != "")
                       SizedBox(
                           width: Get.width * 0.4,
                           child: Text(
@@ -194,16 +197,16 @@ class _ResultPageState extends State<ResultPage> {
                           if (quality != Quality.not_enough_data)
                             const SizedBox(width: 4),
                           SizedBox(
-                            width: quality != Quality.not_enough_data
-                                ? Get.width * 0.2
-                                : Get.width * 0.44,
+                            // width: quality != Quality.not_enough_data
+                            //     ? Get.width * 0.15
+                            //     : Get.width * 0.15,
                             child: Text(
                               quality.toString().split(".")[1].toString().tr(),
                               style: TextStyle(
                                 color: headingColor,
                                 fontSize: quality == Quality.not_enough_data
-                                    ? 12
-                                    : 14,
+                                    ? Get.height * 0.015
+                                    : Get.height * 0.015,
                                 fontWeight: quality == Quality.not_enough_data
                                     ? FontWeight.w500
                                     : FontWeight.w600,
@@ -217,7 +220,7 @@ class _ResultPageState extends State<ResultPage> {
                               "${result.mark}/100",
                               style: TextStyle(
                                 color: getQualityColor(quality),
-                                fontSize: 12,
+                                fontSize: 11,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -233,58 +236,126 @@ class _ResultPageState extends State<ResultPage> {
                 child: Column(
                   children: [
                     const SizedBox(height: 32),
-                    if (result.energyKcal != 0.0 ||
-                        result.saturatedFatG != 0.0 ||
-                        result.sugarG != 0.0 ||
-                        result.saltG != 0.0)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              "Defaults",
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w600),
-                            ),
-                            Text(
-                                result.prodcutType == ProductType.beverage
-                                    ? 'per 100ml'
-                                    : 'per 100g',
-                                style: TextStyle(
-                                    color: Colors.grey[500],
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500)),
-                          ],
-                        ),
-                      ),
+                    Obx(
+                      () => scanController.isDefaultExist.value
+                          ? Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 24),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    "Defaults",
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  Text(
+                                      result.prodcutType == ProductType.beverage
+                                          ? 'per 100ml'
+                                          : 'per 100g',
+                                      style: TextStyle(
+                                          color: Colors.grey[500],
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500)),
+                                ],
+                              ),
+                            )
+                          : const SizedBox(),
+                    ),
                     const SizedBox(height: 4),
-                    if (result.energyKcal != 0.0)
-                      InfoTile(
-                        //
-                        title: "energy",
-                        description: result.prodcutType == ProductType.beverage
-                            ? energyForBevDes(result.energyKjPoints)
-                            : energyDes(result.energyKjPoints),
-                        quantity: result.energyKcal.toDouble(),
-                        unit: "kcal",
-                        quality: result.prodcutType == ProductType.beverage
-                            ? getNegNutrimentBevQuality(result.energyKjPoints)
-                            : getNproductsEnergyNutrimentQuality(result
-                                .energyKjPoints), //getNegNutrimentQuality(result.energyKjPoints),
-                        breakpoints: result.prodcutType == ProductType.beverage
-                            ? energyKcalQualityBreakpointsForBeverage
-                            : energyKjQualityBreakpoints,
-                        iconPath: "assets/icons/calories.png",
-                        // icon: FontAwesomeIcons.fire,
-                      ),
-                    if (result.saturatedFatG != 0.0)
+                    if (result.prodcutType == ProductType.beverage)
+                      getNegNutrimentBevQuality(result.energyKjPoints) !=
+                                  Quality.excellent &&
+                              getNegNutrimentBevQuality(
+                                      result.energyKjPoints) !=
+                                  Quality.good
+                          ? InfoTile(
+                              //
+                              title: "energy",
+                              description:
+                                  result.prodcutType == ProductType.beverage
+                                      ? energyForBevDes(result.energyKjPoints)
+                                      : energyDes(result.energyKjPoints),
+                              quantity: result.energyKcal.toDouble(),
+                              unit: "kcal",
+                              quality: result.prodcutType ==
+                                      ProductType.beverage
+                                  ? getNegNutrimentBevQuality(
+                                      result.energyKjPoints)
+                                  : getNproductsEnergyNutrimentQuality(result
+                                      .energyKjPoints), //getNegNutrimentQuality(result.energyKjPoints),
+                              breakpoints:
+                                  result.prodcutType == ProductType.beverage
+                                      ? energyKcalQualityBreakpointsForBeverage
+                                      : energyKjQualityBreakpoints,
+                              iconPath: "assets/icons/calories.png",
+                              // icon: FontAwesomeIcons.fire,
+                            )
+                          : SizedBox(),
+                    if (getProtienNutrimentQuality(result.proteinsGPoints) !=
+                            Quality.excellent &&
+                        getProtienNutrimentQuality(result.proteinsGPoints) !=
+                            Quality.good)
+                      result.protiensG != 0.0
+                          ? InfoTile(
+                              positiveNutriment: true,
+                              title: "proteins",
+                              description: proteinsDes(result.proteinsGPoints),
+                              breakpoints: prteinsQualityBreakpoints,
+                              quantity: result.protiensG.toDouble(),
+                              unit: "g",
+                              quality: getProtienNutrimentQuality(
+                                  result.proteinsGPoints),
+                              iconPath: "assets/icons/protein.png",
+
+                              //icon: FontAwesomeIcons.egg,
+                            )
+                          : SizedBox(),
+                    if (result.prodcutType != ProductType.beverage)
+                      getNproductsEnergyNutrimentQuality(
+                                      result.energyKjPoints) !=
+                                  Quality.excellent &&
+                              getNproductsEnergyNutrimentQuality(
+                                      result.energyKjPoints) !=
+                                  Quality.good
+                          ? InfoTile(
+                              //
+                              title: "energy",
+                              description:
+                                  result.prodcutType == ProductType.beverage
+                                      ? energyForBevDes(result.energyKjPoints)
+                                      : energyDes(result.energyKjPoints),
+                              quantity: result.energyKcal.toDouble(),
+                              unit: "kcal",
+                              quality: result.prodcutType ==
+                                      ProductType.beverage
+                                  ? getNegNutrimentBevQuality(
+                                      result.energyKjPoints)
+                                  : getNproductsEnergyNutrimentQuality(result
+                                      .energyKjPoints), //getNegNutrimentQuality(result.energyKjPoints),
+                              breakpoints:
+                                  result.prodcutType == ProductType.beverage
+                                      ? energyKcalQualityBreakpointsForBeverage
+                                      : energyKjQualityBreakpoints,
+                              iconPath: "assets/icons/calories.png",
+                              // icon: FontAwesomeIcons.fire,
+                            )
+                          : SizedBox(),
+                    if (getNegNutrimentQuality(result.saturatedFatGPoints) !=
+                            Quality.excellent &&
+                        getNegNutrimentQuality(result.saturatedFatGPoints) !=
+                            Quality.good)
                       InfoTile(
                         title: "saturated_fat",
                         description:
                             saturatedFatDes(result.saturatedFatGPoints),
                         breakpoints: saturatedFatGQualityBreakpoints,
-                        quantity: result.saturatedFatG.toDouble(),
+                        quantity: result.prodcutType == ProductType.addedFat
+                            ? (result.saturatedFatG.toDouble() / result.fat) *
+                                100
+                            : result.saturatedFatG.toDouble(),
 
                         unit: result.prodcutType == ProductType.addedFat
                             ? "%"
@@ -296,68 +367,325 @@ class _ResultPageState extends State<ResultPage> {
 
                         //icon: FontAwesomeIcons.droplet,
                       ),
+                    if (getPosNutrimentQuality(result.fruiteVegeGPoints) !=
+                            Quality.excellent &&
+                        getPosNutrimentQuality(result.fruiteVegeGPoints) !=
+                            Quality.good)
+                      widget.result.fruitesVegetablesG != 0.0
+                          ? InfoTile(
+                              positiveNutriment: true,
+                              title: "fruite_vegetables",
+                              description:
+                                  fruiteVegeDes(result.fruiteVegeGPoints),
+                              breakpoints:
+                                  result.prodcutType == ProductType.beverage
+                                      ? fruiteVegeQualityBreakpointsForBeverage
+                                      : fruiteVegeQualityBreakpoints,
+                              quantity: result.fruitesVegetablesG.toDouble(),
+                              unit: "g",
+                              quality: getPosNutrimentQuality(
+                                  result.fruiteVegeGPoints),
+                              iconPath: "assets/icons/fruit.png",
 
-                    if (result.sugarG != 0.0)
-                      InfoTile(
-                        title: "sugar",
-                        description: result.prodcutType == ProductType.beverage
-                            ? sugarBevDes(result.sugarGPoints)
-                            : sugarDes(result.sugarGPoints),
-                        breakpoints: result.prodcutType == ProductType.beverage
-                            ? sugarGQualityBreakpointsForBeverage
-                            : sugarGQualityBreakpoints,
-                        quantity: result.sugarG.toDouble(),
-                        unit: "g",
-                        quality: result.prodcutType == ProductType.beverage
-                            ? getBevSugarNegNutrimentQuality(
-                                result.sugarGPoints)
-                            : getNormalSugarNutrimentQuality(
-                                result.sugarGPoints),
-                        iconPath: "assets/icons/sugar-cube.png",
+                              // icon: FontAwesomeIcons.leaf,
+                            )
+                          : SizedBox(),
+                    if (getPosNutrimentQuality(result.fiberGPoints) !=
+                            Quality.excellent &&
+                        getPosNutrimentQuality(result.fiberGPoints) !=
+                            Quality.good)
+                      result.fiberGPoints != 0.0
+                          ? InfoTile(
+                              positiveNutriment: true,
+                              title: "fiber",
+                              description: fiberDes(result.fiberGPoints),
+                              breakpoints: fiberQualityBreakpoints,
+                              quantity: result.fiberG.toDouble(),
+                              unit: "g",
+                              quality:
+                                  getPosNutrimentQuality(result.fiberGPoints),
+                              iconPath: "assets/icons/wheat.png",
 
-                        // icon: FontAwesomeIcons.cookie
-                      ),
-                    if (result.saltG != 0.0)
-                      InfoTile(
-                        title: "salt", //result.sodiumMgPoints
-                        description: sodiumDes(result.sodiumMgPoints),
-                        breakpoints: sodiumMgQualityBreakpoints,
-                        quantity: result.saltG.toDouble(),
-                        unit: "g",
-                        quality: getSaltNutrimentQuality(result.sodiumMgPoints),
-                        iconPath: "assets/icons/salt.png",
+                              //  icon: FontAwesomeIcons.bolt,
+                            )
+                          : SizedBox(),
 
-                        //  icon: FontAwesomeIcons.dollarSign,
-                      ),
+                    if (result.prodcutType == ProductType.beverage)
+                      getBevSugarNegNutrimentQuality(result.sugarGPoints) !=
+                                  Quality.excellent &&
+                              getBevSugarNegNutrimentQuality(
+                                      result.sugarGPoints) !=
+                                  Quality.good
+                          ? InfoTile(
+                              title: "sugar",
+                              description:
+                                  result.prodcutType == ProductType.beverage
+                                      ? sugarBevDes(result.sugarGPoints)
+                                      : sugarDes(result.sugarGPoints),
+                              breakpoints:
+                                  result.prodcutType == ProductType.beverage
+                                      ? sugarGQualityBreakpointsForBeverage
+                                      : sugarGQualityBreakpoints,
+                              quantity: result.sugarG.toDouble(),
+                              unit: "g",
+                              quality:
+                                  result.prodcutType == ProductType.beverage
+                                      ? getBevSugarNegNutrimentQuality(
+                                          result.sugarGPoints)
+                                      : getNormalSugarNutrimentQuality(
+                                          result.sugarGPoints),
+                              iconPath: "assets/icons/sugar-cube.png",
+
+                              // icon: FontAwesomeIcons.cookie
+                            )
+                          : SizedBox(),
+                    if (result.prodcutType != ProductType.beverage)
+                      getNormalSugarNutrimentQuality(result.sugarGPoints) !=
+                                  Quality.excellent &&
+                              getNormalSugarNutrimentQuality(
+                                      result.sugarGPoints) !=
+                                  Quality.good
+                          ? InfoTile(
+                              title: "sugar",
+                              description:
+                                  result.prodcutType == ProductType.beverage
+                                      ? sugarBevDes(result.sugarGPoints)
+                                      : sugarDes(result.sugarGPoints),
+                              breakpoints:
+                                  result.prodcutType == ProductType.beverage
+                                      ? sugarGQualityBreakpointsForBeverage
+                                      : sugarGQualityBreakpoints,
+                              quantity: result.sugarG.toDouble(),
+                              unit: "g",
+                              quality:
+                                  result.prodcutType == ProductType.beverage
+                                      ? getBevSugarNegNutrimentQuality(
+                                          result.sugarGPoints)
+                                      : getNormalSugarNutrimentQuality(
+                                          result.sugarGPoints),
+                              iconPath: "assets/icons/sugar-cube.png",
+
+                              // icon: FontAwesomeIcons.cookie
+                            )
+                          : SizedBox(),
+
+                    if (getSaltNutrimentQuality(result.sodiumMgPoints) !=
+                            Quality.excellent &&
+                        getSaltNutrimentQuality(result.sodiumMgPoints) !=
+                            Quality.good)
+                      result.saltG != 0.0
+                          ? InfoTile(
+                              title: "salt", //result.sodiumMgPoints
+                              description: sodiumDes(result.sodiumMgPoints),
+                              breakpoints: sodiumMgQualityBreakpoints,
+                              quantity: result.saltG.toDouble(),
+                              unit: "g",
+                              quality: getSaltNutrimentQuality(
+                                  result.sodiumMgPoints),
+                              iconPath: "assets/icons/salt.png",
+
+                              //  icon: FontAwesomeIcons.dollarSign,
+                            )
+                          : SizedBox(),
                     const SizedBox(height: 8),
 
-                    if (result.fruitesVegetablesG != 0.0 ||
-                        result.fiberG != 0.0 ||
-                        result.protiensG != 0.0)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              "Qualities",
+                    // if (result.fruitesVegetablesG != 0.0 ||
+                    //     result.fiberG != 0.0 ||
+                    //     result.protiensG != 0.0)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "Qualities",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w600),
+                          ),
+                          Text(
+                              result.prodcutType == ProductType.beverage
+                                  ? 'per 100ml'
+                                  : 'per 100g',
                               style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w600),
-                            ),
-                            Text(
-                                result.prodcutType == ProductType.beverage
-                                    ? 'per 100ml'
-                                    : 'per 100g',
-                                style: TextStyle(
-                                    color: Colors.grey[500],
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500)),
-                          ],
-                        ),
+                                  color: Colors.grey[500],
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500)),
+                        ],
                       ),
+                    ),
                     const SizedBox(height: 4),
+                    if (getSaltNutrimentQuality(result.sodiumMgPoints) ==
+                            Quality.excellent ||
+                        getSaltNutrimentQuality(result.sodiumMgPoints) ==
+                            Quality.good)
+                      result.saltG != 0.0
+                          ? InfoTile(
+                              title: "salt", //result.sodiumMgPoints
+                              description: sodiumDes(result.sodiumMgPoints),
+                              breakpoints: sodiumMgQualityBreakpoints,
+                              quantity: result.saltG.toDouble(),
+                              unit: "g",
+                              quality: getSaltNutrimentQuality(
+                                  result.sodiumMgPoints),
+                              iconPath: "assets/icons/salt.png",
 
-                    if (result.fruitesVegetablesG != 0.0)
+                              //  icon: FontAwesomeIcons.dollarSign,
+                            )
+                          : SizedBox(),
+                    if (getNegNutrimentQuality(result.saturatedFatGPoints) ==
+                            Quality.excellent ||
+                        getNegNutrimentQuality(result.saturatedFatGPoints) ==
+                            Quality.good)
+                      result.saturatedFatGPoints != 0.0
+                          ? InfoTile(
+                              title: "saturated_fat",
+                              description:
+                                  saturatedFatDes(result.saturatedFatGPoints),
+                              breakpoints: saturatedFatGQualityBreakpoints,
+                              quantity:
+                                  result.prodcutType == ProductType.addedFat
+                                      ? (result.saturatedFatG.toDouble() /
+                                              result.fat) *
+                                          100
+                                      : result.saturatedFatG.toDouble(),
+
+                              unit: result.prodcutType == ProductType.addedFat
+                                  ? "%"
+                                  : "g",
+
+                              quality: getNegNutrimentQuality(
+                                  result.saturatedFatGPoints),
+                              iconPath: "assets/icons/trans-fat.png",
+
+                              //icon: FontAwesomeIcons.droplet,
+                            )
+                          : SizedBox(),
+                    if (result.prodcutType != ProductType.beverage)
+                      getNproductsEnergyNutrimentQuality(
+                                      result.energyKjPoints) ==
+                                  Quality.excellent ||
+                              getNproductsEnergyNutrimentQuality(
+                                      result.energyKjPoints) ==
+                                  Quality.good
+                          ? result.energyKcal != 0.0
+                              ? InfoTile(
+                                  //
+                                  title: "energy",
+                                  description: result.prodcutType ==
+                                          ProductType.beverage
+                                      ? energyForBevDes(result.energyKjPoints)
+                                      : energyDes(result.energyKjPoints),
+                                  quantity: result.energyKcal.toDouble(),
+                                  unit: "kcal",
+                                  quality: result.prodcutType ==
+                                          ProductType.beverage
+                                      ? getNegNutrimentBevQuality(
+                                          result.energyKjPoints)
+                                      : getNproductsEnergyNutrimentQuality(result
+                                          .energyKjPoints), //getNegNutrimentQuality(result.energyKjPoints),
+                                  breakpoints: result.prodcutType ==
+                                          ProductType.beverage
+                                      ? energyKcalQualityBreakpointsForBeverage
+                                      : energyKjQualityBreakpoints,
+                                  iconPath: "assets/icons/calories.png",
+                                  // icon: FontAwesomeIcons.fire,
+                                )
+                              : SizedBox()
+                          : SizedBox(),
+                    if (result.prodcutType == ProductType.beverage)
+                      getNproductsEnergyNutrimentQuality(
+                                      result.energyKjPoints) ==
+                                  Quality.excellent ||
+                              getNproductsEnergyNutrimentQuality(
+                                      result.energyKjPoints) ==
+                                  Quality.good
+                          ? result.energyKjPoints != 0.0
+                              ? InfoTile(
+                                  //
+                                  title: "energy",
+                                  description: result.prodcutType ==
+                                          ProductType.beverage
+                                      ? energyForBevDes(result.energyKjPoints)
+                                      : energyDes(result.energyKjPoints),
+                                  quantity: result.energyKcal.toDouble(),
+                                  unit: "kcal",
+                                  quality: result.prodcutType ==
+                                          ProductType.beverage
+                                      ? getNegNutrimentBevQuality(
+                                          result.energyKjPoints)
+                                      : getNproductsEnergyNutrimentQuality(result
+                                          .energyKjPoints), //getNegNutrimentQuality(result.energyKjPoints),
+                                  breakpoints: result.prodcutType ==
+                                          ProductType.beverage
+                                      ? energyKcalQualityBreakpointsForBeverage
+                                      : energyKjQualityBreakpoints,
+                                  iconPath: "assets/icons/calories.png",
+                                  // icon: FontAwesomeIcons.fire,
+                                )
+                              : SizedBox()
+                          : SizedBox(),
+                    if (result.prodcutType == ProductType.beverage)
+                      getBevSugarNegNutrimentQuality(result.sugarGPoints) ==
+                                  Quality.excellent ||
+                              getBevSugarNegNutrimentQuality(
+                                      result.sugarGPoints) ==
+                                  Quality.good
+                          ? InfoTile(
+                              title: "sugar",
+                              description:
+                                  result.prodcutType == ProductType.beverage
+                                      ? sugarBevDes(result.sugarGPoints)
+                                      : sugarDes(result.sugarGPoints),
+                              breakpoints:
+                                  result.prodcutType == ProductType.beverage
+                                      ? sugarGQualityBreakpointsForBeverage
+                                      : sugarGQualityBreakpoints,
+                              quantity: result.sugarG.toDouble(),
+                              unit: "g",
+                              quality:
+                                  result.prodcutType == ProductType.beverage
+                                      ? getBevSugarNegNutrimentQuality(
+                                          result.sugarGPoints)
+                                      : getNormalSugarNutrimentQuality(
+                                          result.sugarGPoints),
+                              iconPath: "assets/icons/sugar-cube.png",
+
+                              // icon: FontAwesomeIcons.cookie
+                            )
+                          : SizedBox(),
+                    if (result.prodcutType != ProductType.beverage)
+                      getNormalSugarNutrimentQuality(result.sugarGPoints) ==
+                                  Quality.excellent ||
+                              getNormalSugarNutrimentQuality(
+                                      result.sugarGPoints) ==
+                                  Quality.good
+                          ? InfoTile(
+                              title: "sugar",
+                              description:
+                                  result.prodcutType == ProductType.beverage
+                                      ? sugarBevDes(result.sugarGPoints)
+                                      : sugarDes(result.sugarGPoints),
+                              breakpoints:
+                                  result.prodcutType == ProductType.beverage
+                                      ? sugarGQualityBreakpointsForBeverage
+                                      : sugarGQualityBreakpoints,
+                              quantity: result.sugarG.toDouble(),
+                              unit: "g",
+                              quality:
+                                  result.prodcutType == ProductType.beverage
+                                      ? getBevSugarNegNutrimentQuality(
+                                          result.sugarGPoints)
+                                      : getNormalSugarNutrimentQuality(
+                                          result.sugarGPoints),
+                              iconPath: "assets/icons/sugar-cube.png",
+
+                              // icon: FontAwesomeIcons.cookie
+                            )
+                          : SizedBox(),
+                    if (getPosNutrimentQuality(result.fruiteVegeGPoints) ==
+                            Quality.excellent ||
+                        getPosNutrimentQuality(result.fruiteVegeGPoints) ==
+                            Quality.good)
                       InfoTile(
                         positiveNutriment: true,
                         title: "fruite_vegetables",
@@ -373,33 +701,44 @@ class _ResultPageState extends State<ResultPage> {
 
                         // icon: FontAwesomeIcons.leaf,
                       ),
-                    if (result.fiberG != 0.0)
-                      InfoTile(
-                        positiveNutriment: true,
-                        title: "fiber",
-                        description: fiberDes(result.fiberGPoints),
-                        breakpoints: fiberQualityBreakpoints,
-                        quantity: result.fiberG.toDouble(),
-                        unit: "g",
-                        quality: getPosNutrimentQuality(result.fiberGPoints),
-                        iconPath: "assets/icons/wheat.png",
+                    if (getPosNutrimentQuality(result.fiberGPoints) ==
+                            Quality.excellent ||
+                        getPosNutrimentQuality(result.fiberGPoints) ==
+                            Quality.good)
+                      result.fiberGPoints != 0.0
+                          ? InfoTile(
+                              positiveNutriment: true,
+                              title: "fiber",
+                              description: fiberDes(result.fiberGPoints),
+                              breakpoints: fiberQualityBreakpoints,
+                              quantity: result.fiberG.toDouble(),
+                              unit: "g",
+                              quality:
+                                  getPosNutrimentQuality(result.fiberGPoints),
+                              iconPath: "assets/icons/wheat.png",
 
-                        //  icon: FontAwesomeIcons.bolt,
-                      ),
-                    if (result.protiensG != 0.0)
-                      InfoTile(
-                        positiveNutriment: true,
-                        title: "proteins",
-                        description: proteinsDes(result.proteinsGPoints),
-                        breakpoints: prteinsQualityBreakpoints,
-                        quantity: result.protiensG.toDouble(),
-                        unit: "g",
-                        quality:
-                            getProtienNutrimentQuality(result.proteinsGPoints),
-                        iconPath: "assets/icons/protein.png",
+                              //  icon: FontAwesomeIcons.bolt,
+                            )
+                          : SizedBox(),
+                    if (getProtienNutrimentQuality(result.proteinsGPoints) ==
+                            Quality.excellent ||
+                        getProtienNutrimentQuality(result.proteinsGPoints) ==
+                            Quality.good)
+                      result.protiensG != 0.0
+                          ? InfoTile(
+                              positiveNutriment: true,
+                              title: "proteins",
+                              description: proteinsDes(result.proteinsGPoints),
+                              breakpoints: prteinsQualityBreakpoints,
+                              quantity: result.protiensG.toDouble(),
+                              unit: "g",
+                              quality: getProtienNutrimentQuality(
+                                  result.proteinsGPoints),
+                              iconPath: "assets/icons/protein.png",
 
-                        //icon: FontAwesomeIcons.egg,
-                      ),
+                              //icon: FontAwesomeIcons.egg,
+                            )
+                          : SizedBox(),
                     if (result.additiveTags.isNotEmpty)
                       AdditiveTile(
                         title: "additives",
@@ -568,8 +907,10 @@ class _AdditiveTileState extends State<AdditiveTile> {
                                   SizedBox(
                                       width: Get.width * 0.3,
                                       child: Text(
-                                        additivesData[additive]!["name"]
-                                            .toString(),
+                                        additivesData[additive] == null
+                                            ? ""
+                                            : additivesData[additive]!['name']
+                                                .toString(),
                                         style: TextStyle(
                                             fontSize: 12,
                                             color: Colors.grey[400]),

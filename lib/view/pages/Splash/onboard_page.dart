@@ -26,13 +26,13 @@ class OnBoardPage extends StatelessWidget {
             SizedBox(
               height: size.height * 0.06,
             ),
-            const Text(
-              "scan_and_enjoy",
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
-              ),
-            ).tr(),
+            // const Text(
+            //   "scan_and_enjoy",
+            //   style: TextStyle(
+            //     fontSize: 22,
+            //     fontWeight: FontWeight.w700,
+            //   ),
+            // ).tr(),
             SizedBox(
               height: size.height * 0.01,
             ),
@@ -51,20 +51,23 @@ class OnBoardPage extends StatelessWidget {
               },
               child: Container(
                 height: 50,
-                width: 136,
+                width: MediaQuery.of(context).size.width * 0.35,
                 decoration: BoxDecoration(
                   color: buttonColor,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Center(
-                  child: const Text(
-                    "get_started",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ).tr(),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "get_started",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: MediaQuery.of(context).size.width * 0.035,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ).tr(),
+                  ),
                 ),
               ),
             ),
